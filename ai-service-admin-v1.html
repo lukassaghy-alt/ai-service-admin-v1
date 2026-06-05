@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Service Admin — Eagle Admin</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --blue:#4a89dc;
+  --blue-dark:#3b7ddd;
+  --blue-soft:#eef3fc;
+  --sidebar-bg:#ffffff;
+  --sidebar-text:#5a6577;
+  --body-bg:#f4f6f9;
+  --card:#ffffff;
+  --border:#e8ebf0;
+  --thead:#f7f8fa;
+  --text:#5a6a7a;
+  --heading:#2d3a4a;
+  --muted:#9aa5b1;
+  --success:#27ae60;
+  --warning:#f0a500;
+  --danger:#e74c5e;
+  --purple:#7c6df2;
+  --radius:10px;
+  --shadow:0 1px 6px rgba(36,50,66,.07);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Poppins',sans-serif;background:var(--body-bg);color:var(--text);font-size:14px;}
+h1,h2,h3,h4,h5{color:var(--heading);font-weight:600;margin:0;}
+a{color:var(--blue);cursor:pointer;}
+a:hover{text-decoration:none;}
+
+/* ===== SIDEBAR ===== */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--sidebar-bg);z-index:40;overflow-y:auto;border-right:1px solid var(--border);}
+.brand{padding:24px 24px 20px;font-size:24px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);letter-spacing:.3px;}
+.brand .light{font-weight:500;}
+.menu{padding:10px 0;}
+.menu a{display:flex;align-items:center;gap:14px;padding:12px 24px;color:var(--sidebar-text);font-size:14.5px;font-weight:500;transition:.15s;}
+.menu a i.lead-ic{width:20px;text-align:center;font-size:16px;color:#9aa5b1;}
+.menu a .chev{margin-left:auto;font-size:11px;color:#c3ccd6;}
+.menu a:hover{background:#f6f8fb;color:var(--heading);}
+.menu a.active{background:var(--blue-soft);color:var(--blue);font-weight:600;box-shadow:inset 3px 0 0 var(--blue);}
+.menu a.active i.lead-ic{color:var(--blue);}
+
+/* ===== TOPBAR ===== */
+.topbar{position:fixed;top:0;left:240px;right:0;height:74px;background:#fff;border-bottom:1px solid var(--border);z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 30px;}
+.topbar h2{font-size:25px;font-weight:600;}
+.topbar .right{display:flex;align-items:center;gap:26px;}
+.topbar .user{display:flex;align-items:center;gap:11px;}
+.topbar .user .av{width:38px;height:38px;border-radius:50%;background:#eef3fc;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.topbar .user .u-name{font-weight:600;color:var(--heading);font-size:13.5px;line-height:1.2;}
+.topbar .user .u-mail{font-size:12px;color:var(--muted);}
+.topbar .power{color:var(--muted);font-size:20px;cursor:pointer;}
+
+/* ===== CONTENT ===== */
+.content{margin-left:240px;padding:74px 0 0;}
+.breadcrumb-bar{padding:14px 30px 0;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;}
+.breadcrumb-bar .sep{color:#cdd5de;}
+.page-body{padding:22px 30px 60px;}
+
+/* ===== CARD ===== */
+.card{border:0;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:22px;background:var(--card);}
+.card-body{padding:24px 26px;}
+.card-title{font-size:16px;font-weight:600;color:var(--heading);}
+.card-subtitle{font-size:12.5px;color:var(--muted);font-weight:400;}
+
+/* ===== FEATURE LISTING (rows) ===== */
+.feat-row{display:flex;align-items:center;justify-content:space-between;padding:18px 6px;border-bottom:1px solid var(--border);}
+.feat-row:last-child{border-bottom:0;}
+.feat-row .fname{font-size:15.5px;font-weight:600;color:var(--heading);}
+.feat-row:hover{background:#fafbfd;}
+
+/* ===== BADGES ===== */
+.badge{font-weight:500;padding:6px 11px;border-radius:6px;font-size:11.5px;}
+.b-active{background:rgba(39,174,96,.13);color:#1f9e54;}
+.b-draft{background:rgba(240,165,0,.16);color:#c98a00;}
+.b-inherit{background:rgba(124,109,242,.13);color:#5d4bd6;}
+.b-model{background:#eef1f6;color:#5a6b78;font-weight:500;}
+
+/* ===== TABLE ===== */
+.table{margin:0;}
+.table thead th{background:var(--thead);border:0;color:#7c8896;font-size:12px;font-weight:600;padding:15px 16px;text-transform:none;}
+.table thead th:first-child{border-top-left-radius:8px;}
+.table thead th:last-child{border-top-right-radius:8px;}
+.table td{padding:18px 16px;vertical-align:middle;border-top:1px solid var(--border);font-size:14px;color:#566;}
+.table tbody tr:hover{background:#fafbfd;}
+
+/* ===== ACTION BTN (screenshot style) ===== */
+.act-btn{width:40px;height:38px;border-radius:8px;background:#f1f4f8;border:1px solid #e6eaf0;color:#7d8a98;display:inline-flex;align-items:center;justify-content:center;transition:.15s;cursor:pointer;}
+.act-btn:hover{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+/* ===== BUTTONS ===== */
+.btn{border-radius:8px;font-size:13.5px;font-weight:500;padding:9px 18px;border:0;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-blue:hover{background:var(--blue-dark);color:#fff;}
+.btn-outline{background:#fff;border:1px solid #d8dee6;color:#5a6a7a;}
+.btn-outline:hover{background:#f4f6f9;color:var(--heading);}
+.btn-outline-blue{background:#fff;border:1px solid var(--blue);color:var(--blue);}
+.btn-outline-blue:hover{background:var(--blue);color:#fff;}
+.btn-success{background:var(--success);color:#fff;}
+.btn-success:hover{background:#1f9e54;color:#fff;}
+.btn-sm{padding:6px 14px;font-size:12.5px;}
+
+/* ===== FEATURE HEAD (editor) ===== */
+.feature-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
+.fi-podcast{background:linear-gradient(135deg,#7c6df2,#a99bff);}
+.fi-qa{background:linear-gradient(135deg,#4a89dc,#6fa8ec);}
+.fi-perex{background:linear-gradient(135deg,#27ae60,#48d18d);}
+.fi-quiz{background:linear-gradient(135deg,#f0697f,#e74c5e);}
+
+/* ===== TABS ===== */
+.editor-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);padding:0 10px;flex-wrap:wrap;}
+.editor-tabs .tab{padding:15px 18px;font-size:13.5px;font-weight:500;color:#8a98a4;cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:8px;}
+.editor-tabs .tab:hover{color:var(--blue);}
+.editor-tabs .tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ===== FORMS ===== */
+.form-label{font-size:12.5px;font-weight:500;color:var(--heading);margin-bottom:6px;display:block;}
+.form-hint{font-size:11.5px;color:var(--muted);margin-top:5px;}
+.form-control,.custom-select{border:1px solid #dbe1e8;border-radius:8px;font-size:13.5px;color:var(--text);padding:10px 13px;height:auto;}
+.form-control:focus,.custom-select:focus{border-color:var(--blue);box-shadow:0 0 0 .15rem rgba(74,137,220,.12);}
+textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:12.5px;line-height:1.6;}
+.form-group{margin-bottom:20px;}
+.range-row{display:flex;align-items:center;gap:14px;}
+.range-row input[type=range]{flex:1;accent-color:var(--blue);}
+.range-val{min-width:54px;text-align:center;background:#eef1f6;border-radius:7px;padding:6px;font-weight:600;color:var(--heading);font-size:13px;}
+.switch{position:relative;display:inline-block;width:46px;height:24px;}
+.switch input{display:none;}
+.slider-sw{position:absolute;inset:0;background:#ccd4db;border-radius:24px;cursor:pointer;transition:.3s;}
+.slider-sw:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.switch input:checked + .slider-sw{background:var(--success);}
+.switch input:checked + .slider-sw:before{transform:translateX(22px);}
+.switch input:disabled + .slider-sw{background:#e3e7ec;cursor:not-allowed;}
+.cap-pill{font-size:10.5px;padding:3px 9px;border-radius:11px;font-weight:600;margin-left:8px;}
+.cap-yes{background:rgba(39,174,96,.14);color:#1f9e54;}
+.cap-no{background:#eef0f3;color:#a3acb5;}
+.disabled-field{opacity:.5;pointer-events:none;}
+.var-chip{display:inline-flex;align-items:center;background:#eef1f6;border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--heading);cursor:pointer;margin:0 6px 6px 0;font-family:monospace;}
+.var-chip:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.preview-box{background:#222b36;color:#cdd6e0;border-radius:8px;padding:18px 20px;font-family:monospace;font-size:12.5px;line-height:1.7;white-space:pre-wrap;min-height:200px;}
+.preview-box .var-hl{background:rgba(240,165,0,.28);color:#ffd95e;border-radius:3px;padding:1px 4px;}
+.resp-box{background:#f7fafc;border:1px dashed var(--border);border-radius:8px;padding:18px;font-size:13px;line-height:1.65;min-height:140px;}
+.section-divider{display:flex;align-items:center;gap:12px;margin:6px 0 22px;}
+.section-divider .line{flex:1;height:1px;background:var(--border);}
+.section-divider .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#a3acb5;font-weight:600;}
+.alert-soft{background:rgba(124,109,242,.07);border:1px solid rgba(124,109,242,.2);border-radius:8px;padding:13px 17px;font-size:12.5px;color:#5d4bd6;display:flex;align-items:center;gap:10px;}
+.editor-footer{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border);padding:15px 26px;display:flex;align-items:center;justify-content:space-between;border-bottom-left-radius:var(--radius);border-bottom-right-radius:var(--radius);}
+.save-status{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;}
+
+/* help fab */
+.help-fab{position:fixed;right:26px;bottom:26px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(74,137,220,.45);cursor:pointer;z-index:60;}
+
+.modal-content{border:0;border-radius:12px;}
+.modal-header{border-bottom:1px solid var(--border);}
+.modal-footer{border-top:1px solid var(--border);}
+
+@media(max-width:991px){
+  .sidebar{width:64px;}.brand{font-size:0;padding:24px 10px;}.brand:before{content:"E";font-size:24px;}
+  .menu a span,.menu a .chev{display:none;}.topbar{left:64px;}.content{margin-left:64px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+  <div class="brand">EAGLE <span class="light">Admin</span></div>
+  <div class="menu">
+    <a><i class="fa-solid fa-chart-simple lead-ic"></i><span>Realtime štatistiky</span></a>
+    <a><i class="fa-regular fa-newspaper lead-ic"></i><span>Zoznam článkov</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-house lead-ic"></i><span>Homepage</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-regular fa-images lead-ic"></i><span>DAM</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-play lead-ic"></i><span>Video</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-puzzle-piece lead-ic"></i><span>Moduly</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a class="active"><i class="fa-solid fa-robot lead-ic"></i><span>AI Service Admin</span></a>
+    <a><i class="fa-regular fa-circle-check lead-ic"></i><span>Testy</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-regular fa-rectangle-list lead-ic"></i><span>Ponuky článkov</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-print lead-ic"></i><span>Print</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-chart-line lead-ic"></i><span>Editor výkonnosť</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-regular fa-star lead-ic"></i><span>Sponzorované články</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-database lead-ic"></i><span>Data Sandbox</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a><i class="fa-solid fa-gear lead-ic"></i><span>Systém</span><i class="fa-solid fa-chevron-right chev"></i></a>
+  </div>
+</div>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+  <h2 id="pageTitle">AI Service Admin</h2>
+  <div class="right">
+    <div class="user">
+      <div class="av"><i class="fa-regular fa-circle-user"></i></div>
+      <div><div class="u-name">Lukas.Saghy@newsandmedia.sk</div><div class="u-mail">Lukas.Saghy@newsandmedia.sk</div></div>
+    </div>
+    <i class="fa-solid fa-power-off power"></i>
+  </div>
+</div>
+
+<!-- ===== CONTENT ===== -->
+<div class="content">
+  <div class="breadcrumb-bar" id="breadcrumb">
+    <a onclick="goFeatures()">Domov</a><span class="sep">/</span><span>AI Service Admin</span>
+  </div>
+  <div class="page-body">
+
+    <!-- ============ VIEW 1: FEATURES LISTING ============ -->
+    <div id="view-features">
+      <div class="card">
+        <div class="card-body" style="padding:8px 26px;">
+          <div class="feat-row" onclick="openFeature('podcast')">
+            <div class="fname">Podcastové štúdio</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('qa')">
+            <div class="fname">Q&amp;A pre článok</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('perex')">
+            <div class="fname">Perex generátor</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('quiz')">
+            <div class="fname">Kvíz generátor</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW 2: FEATURE DETAIL ============ -->
+    <div id="view-feature" style="display:none">
+
+      <!-- predvolená konfigurácia -->
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-layer-group mr-2" style="color:var(--purple)"></i>Predvolené nastavenie</div>
+              <div class="card-subtitle">Použije sa pre Stránky, ktoré nemajú vlastné nastavenie.</div>
+            </div>
+            <button class="btn btn-outline-blue btn-sm" onclick="openEditor('Predvolené nastavenie', true)"><i class="fa-solid fa-pen mr-2"></i>Upraviť predvolené</button>
+          </div>
+          <div style="display:flex;gap:34px;flex-wrap:wrap;margin-top:18px;font-size:13px;">
+            <div><span class="form-hint">Model</span><br><span class="badge b-model">claude-sonnet-4 · v20250514</span></div>
+            <div><span class="form-hint">Temperature</span><br><b style="color:var(--heading)">0.7</b></div>
+            <div><span class="form-hint">Max tokens</span><br><b style="color:var(--heading)">4096</b></div>
+            <div><span class="form-hint">Web search</span><br><span class="badge b-active">Zapnuté</span></div>
+            <div><span class="form-hint">Aktívna verzia</span><br><b style="color:var(--heading)">v7</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- nastavenie podľa stránky -->
+      <div class="card">
+        <div class="card-body">
+          <div style="margin-bottom:18px;">
+            <div class="card-title"><i class="fa-solid fa-globe mr-2" style="color:var(--blue)"></i>Nastavenie podľa Stránky</div>
+          </div>
+          <table class="table">
+            <thead><tr>
+              <th>Stránka</th><th>Stav</th><th>Model</th><th>Aktívna verzia</th><th>Posledná zmena</th><th class="text-right">Akcie</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td>Plus JEDEN Deň</td>
+                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-model">claude-opus-4</span></td>
+                <td>v12</td>
+                <td>02.06.2026 · J. Novák</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Plus JEDEN Deň')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+              <tr>
+                <td>Šport 24</td>
+                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-model">claude-sonnet-4</span></td>
+                <td>v5</td>
+                <td>29.05.2026 · M. Kováč</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Šport 24')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+              <tr>
+                <td>Nový Čas</td>
+                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-model">gpt-4.1</span></td>
+                <td>v8</td>
+                <td>31.05.2026 · L. Saghy</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Nový Čas')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+              <tr>
+                <td>Eva</td>
+                <td><span class="badge b-inherit">Dedí predvolené</span></td>
+                <td><span class="badge b-model" style="opacity:.55">claude-sonnet-4</span></td>
+                <td><span style="opacity:.5">— (v7 predvolené)</span></td>
+                <td>—</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Eva')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+              <tr>
+                <td>Emma</td>
+                <td><span class="badge b-inherit">Dedí predvolené</span></td>
+                <td><span class="badge b-model" style="opacity:.55">claude-sonnet-4</span></td>
+                <td><span style="opacity:.5">— (v7 predvolené)</span></td>
+                <td>—</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Emma')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+              <tr>
+                <td>Autobild</td>
+                <td><span class="badge b-draft">Vlastné · Koncept</span></td>
+                <td><span class="badge b-model">gpt-4o</span></td>
+                <td><span style="opacity:.5">draft v2</span></td>
+                <td>04.06.2026 · A. Horák</td>
+                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Autobild')"><i class="fa-solid fa-circle-info"></i></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW 3: EDITOR ============ -->
+    <div id="view-editor" style="display:none">
+      <div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;">
+        <div class="card-body" style="display:flex;align-items:center;gap:16px;padding-bottom:0;">
+          <div class="feature-icon fi-podcast" id="edIcon"><i class="fa-solid fa-podcast"></i></div>
+          <div style="flex:1">
+            <h4 style="font-size:17px">Podcastové štúdio <span style="color:#c3ccd4">›</span> <span id="edBrand" style="color:var(--blue)">Plus JEDEN Deň</span></h4>
+            <span class="card-subtitle">Nastavenie LLM modelu pre túto Stránku</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;" id="activeToggleWrap">
+            <span class="form-hint mr-1" title="Zapnutie/vypnutie tohto feature pre danú Stránku">Feature aktívny pre Stránku</span>
+            <label class="switch"><input type="checkbox" checked><span class="slider-sw"></span></label>
+          </div>
+        </div>
+        <div class="editor-tabs">
+          <div class="tab active" onclick="switchTab(this,'tab-model')"><i class="fa-solid fa-microchip"></i> Model &amp; parametre</div>
+          <div class="tab" onclick="switchTab(this,'tab-prompt')"><i class="fa-solid fa-terminal"></i> Prompt</div>
+          <div class="tab" onclick="switchTab(this,'tab-vars')"><i class="fa-solid fa-code"></i> Premenné</div>
+          <div class="tab" onclick="switchTab(this,'tab-versions')"><i class="fa-solid fa-code-branch"></i> Verzie</div>
+          <div class="tab" onclick="switchTab(this,'tab-preview')"><i class="fa-solid fa-flask"></i> Náhľad / Test</div>
+        </div>
+      </div>
+
+      <div class="card" style="border-top-left-radius:0;border-top-right-radius:0;margin-top:0;">
+        <div class="card-body">
+
+          <!-- TAB MODEL -->
+          <div class="tab-pane active" id="tab-model">
+            <div class="alert-soft mb-4" id="overrideInfo">
+              <i class="fa-solid fa-circle-info"></i>
+              Táto Stránka má <b>vlastné nastavenie</b>. <a style="text-decoration:underline">Vrátiť na predvolené nastavenie</a>.
+            </div>
+            <div class="section-divider"><span class="lbl">Model</span><span class="line"></span></div>
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label class="form-label">Model</label>
+                <select class="custom-select" id="modelSel" onchange="onModelChange()"></select>
+                <div class="form-hint">Zoznam dostupných LLM modelov naprieč poskytovateľmi.</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label class="form-label">Fallback model</label>
+                <select class="custom-select"><option>claude-haiku-3.5</option><option>gpt-4o-mini</option><option>Žiadny</option></select>
+                <div class="form-hint">Použije sa pri výpadku primárneho modelu.</div>
+              </div>
+            </div>
+
+            <div class="section-divider mt-3"><span class="lbl">Parametre generovania</span><span class="line"></span></div>
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label class="form-label">Temperature</label>
+                <div class="range-row"><input type="range" min="0" max="2" step="0.1" value="0.7" oninput="tempVal.innerText=this.value"><span class="range-val" id="tempVal">0.7</span></div>
+                <div class="form-hint">Vyššia hodnota = kreatívnejší výstup.</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label class="form-label">Max. output tokens</label>
+                <div class="range-row"><input type="range" min="256" max="16000" step="256" value="4096" oninput="tokVal.innerText=this.value"><span class="range-val" id="tokVal">4096</span></div>
+                <div class="form-hint">Max. dĺžka generovanej odpovede.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 form-group" id="reasoningWrap">
+                <label class="form-label">Reasoning effort <span class="cap-pill cap-yes" id="reasonCap">dostupné</span></label>
+                <select class="custom-select" id="reasoningSel"><option value="low">Low — rýchle, lacné</option><option value="medium" selected>Medium — vyvážené</option><option value="high">High — najlepšia kvalita</option></select>
+                <div class="form-hint">Riadi mieru „rozmýšľania" modelu pred odpoveďou.</div>
+              </div>
+              <div class="col-md-6 form-group" id="websearchWrap">
+                <label class="form-label">Web search <span class="cap-pill cap-yes" id="webCap">dostupné</span></label>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
+                  <label class="switch"><input type="checkbox" id="websearchSw" checked><span class="slider-sw"></span></label>
+                  <span class="form-hint" style="margin-top:0" id="websearchHint">Model môže vyhľadávať aktuálne informácie na webe.</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label class="form-label">Top-P</label>
+                <input type="number" class="form-control" value="1.0" step="0.05" min="0" max="1">
+                <div class="form-hint">Nucleus sampling — pravdepodobnostná hranica výberu tokenov.</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label class="form-label">Top-K</label>
+                <input type="number" class="form-control" value="40" step="1" min="0">
+                <div class="form-hint">Obmedzí výber na K najpravdepodobnejších tokenov (0 = vypnuté).</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 form-group"><label class="form-label">Timeout (s)</label><input type="number" class="form-control" value="60"></div>
+            </div>
+
+            <div class="section-divider mt-3"><span class="lbl">Formát výstupu</span><span class="line"></span></div>
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label class="form-label">Response Format</label>
+                <select class="custom-select" id="respFormatSel" onchange="onRespFormatChange()">
+                  <option value="text">Text (voľný text)</option>
+                  <option value="json">JSON object</option>
+                  <option value="schema">JSON podľa schémy (Structured output)</option>
+                </select>
+                <div class="form-hint">Vynúti štruktúru odpovede modelu.</div>
+              </div>
+            </div>
+            <div class="row" id="schemaWrap" style="display:none">
+              <div class="col-12 form-group">
+                <label class="form-label">Output Schema (JSON)</label>
+                <textarea class="form-control" id="schemaField" rows="11">{
+  "type": "object",
+  "properties": {
+    "title": { "type": "string" },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "speaker": { "type": "string", "enum": ["moderator_1", "moderator_2"] },
+          "text": { "type": "string" }
+        },
+        "required": ["speaker", "text"]
+      }
+    }
+  },
+  "required": ["title", "segments"]
+}</textarea>
+                <div class="form-hint">JSON Schema, podľa ktorej model vráti validný štruktúrovaný výstup.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB PROMPT -->
+          <div class="tab-pane" id="tab-prompt">
+            <div class="form-group">
+              <label class="form-label">System prompt</label>
+              <textarea class="form-control" rows="6">Si profesionálny producent podcastov pre spravodajský portál. Premeň novinový článok na pútavý dialógový scenár pre dvoch moderátorov v jazyku {{jazyk}}. Dodržiavaj redakčný tón Stránky a faktickú presnosť.</textarea>
+              <div class="form-hint">Definuje rolu, kontext a pravidlá správania modelu.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">User prompt (šablóna)</label>
+              <textarea class="form-control" rows="9">Vytvor podcastový scenár z nasledujúceho článku.
+
+Názov: {{nazov_clanku}}
+Obsah:
+{{telo_clanku}}
+
+Požiadavky:
+- Dĺžka epizódy: približne {{dlzka_minut}} minút
+- Štýl: {{styl_podcastu}}
+- Počet moderátorov: {{pocet_moderatorov}}
+- Pridaj úvodný jingle popis a záverečné CTA.</textarea>
+              <div class="form-hint">Použi <code>{{premenna}}</code> pre dynamické vkladanie hodnôt.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dostupné premenné</label><br>
+              <span class="var-chip">{{nazov_clanku}}</span><span class="var-chip">{{telo_clanku}}</span><span class="var-chip">{{jazyk}}</span>
+              <span class="var-chip">{{dlzka_minut}}</span><span class="var-chip">{{styl_podcastu}}</span><span class="var-chip">{{pocet_moderatorov}}</span>
+            </div>
+          </div>
+
+          <!-- TAB VARS -->
+          <div class="tab-pane" id="tab-vars">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+              <div><div class="card-title" style="font-size:15px">Parametrizovateľné časti promptu</div>
+              <div class="card-subtitle">Premenné, ktoré redaktor vyplní pri spustení, alebo sa naplnia automaticky z článku.</div></div>
+              <button class="btn btn-blue btn-sm" data-toggle="modal" data-target="#varModal"><i class="fa-solid fa-plus mr-2"></i>Pridať premennú</button>
+            </div>
+            <table class="table">
+              <thead><tr><th>Kľúč</th><th>Label</th><th>Typ</th><th>Zdroj</th><th>Predvolená</th><th>Povinná</th><th class="text-right">Akcie</th></tr></thead>
+              <tbody>
+                <tr><td><code>nazov_clanku</code></td><td>Názov článku</td><td><span class="badge b-model">text</span></td><td>auto · z článku</td><td>—</td><td><span class="badge b-active">Áno</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+                <tr><td><code>telo_clanku</code></td><td>Telo článku</td><td><span class="badge b-model">text</span></td><td>auto · z článku</td><td>—</td><td><span class="badge b-active">Áno</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+                <tr><td><code>jazyk</code></td><td>Jazyk výstupu</td><td><span class="badge b-model">select</span></td><td>vstup používateľa</td><td>SK</td><td><span class="badge b-active">Áno</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+                <tr><td><code>dlzka_minut</code></td><td>Dĺžka epizódy (min)</td><td><span class="badge b-model">number</span></td><td>vstup používateľa</td><td>10</td><td><span class="badge b-model">Nie</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+                <tr><td><code>styl_podcastu</code></td><td>Štýl podcastu</td><td><span class="badge b-model">select</span></td><td>vstup používateľa</td><td>Konverzačný</td><td><span class="badge b-model">Nie</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+                <tr><td><code>pocet_moderatorov</code></td><td>Počet moderátorov</td><td><span class="badge b-model">number</span></td><td>vstup používateľa</td><td>2</td><td><span class="badge b-model">Nie</span></td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-pen"></i></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- TAB VERSIONS -->
+          <div class="tab-pane" id="tab-versions">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+              <div><div class="card-title" style="font-size:15px">História verzií nastavenia</div>
+              <div class="card-subtitle">Verzionuje sa prompt aj parametre. Aktívna verzia je nasadená v produkcii.</div></div>
+              <button class="btn btn-outline btn-sm"><i class="fa-solid fa-code-compare mr-2"></i>Porovnať verzie</button>
+            </div>
+            <table class="table">
+              <thead><tr><th>Verzia</th><th>Stav</th><th>Autor</th><th>Dátum</th><th>Poznámka</th><th class="text-right">Akcie</th></tr></thead>
+              <tbody>
+                <tr><td><b>v12</b></td><td><span class="badge b-active">Aktívna · produkcia</span></td><td>J. Novák</td><td>02.06.2026</td><td>Skrátený úvod, pridané CTA</td><td class="text-right"><span class="act-btn"><i class="fa-solid fa-eye"></i></span></td></tr>
+                <tr><td><b>v11</b></td><td><span class="badge b-model">Archív</span></td><td>J. Novák</td><td>28.05.2026</td><td>Zmena modelu na opus-4</td><td class="text-right"><span class="act-btn" title="Obnoviť"><i class="fa-solid fa-rotate-left"></i></span></td></tr>
+                <tr><td><b>v10</b></td><td><span class="badge b-model">Archív</span></td><td>M. Kováč</td><td>21.05.2026</td><td>Úprava system promptu</td><td class="text-right"><span class="act-btn" title="Obnoviť"><i class="fa-solid fa-rotate-left"></i></span></td></tr>
+                <tr style="background:rgba(240,165,0,.05)"><td><b>v13</b></td><td><span class="badge b-draft">Koncept</span></td><td>A. Horák</td><td>04.06.2026</td><td>Test temperature 0.9</td><td class="text-right"><span class="act-btn" title="Publikovať"><i class="fa-solid fa-rocket"></i></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- TAB PREVIEW -->
+          <div class="tab-pane" id="tab-preview">
+            <div class="row">
+              <div class="col-lg-5">
+                <div class="card-title" style="font-size:14px;margin-bottom:14px"><i class="fa-solid fa-keyboard mr-2" style="color:var(--blue)"></i>Testovacie hodnoty premenných</div>
+                <div class="form-group"><label class="form-label">nazov_clanku</label><input class="form-control" value="Nové pravidlá parkovania v centre"></div>
+                <div class="form-group"><label class="form-label">jazyk</label><select class="custom-select"><option>SK</option><option>EN</option><option>CZ</option></select></div>
+                <div class="form-group"><label class="form-label">dlzka_minut</label><input class="form-control" type="number" value="8"></div>
+                <div class="form-group"><label class="form-label">styl_podcastu</label><select class="custom-select"><option>Konverzačný</option><option>Investigatívny</option><option>Odľahčený</option></select></div>
+                <div class="form-group"><label class="form-label">pocet_moderatorov</label><input class="form-control" type="number" value="2"></div>
+                <button class="btn btn-success btn-block" onclick="runTest()"><i class="fa-solid fa-play mr-2"></i>Spustiť test</button>
+              </div>
+              <div class="col-lg-7">
+                <div class="card-title" style="font-size:14px;margin-bottom:14px"><i class="fa-solid fa-eye mr-2" style="color:var(--purple)"></i>Výsledný prompt (s dosadenými hodnotami)</div>
+                <div class="preview-box">Vytvor podcastový scenár z nasledujúceho článku.
+
+Názov: <span class="var-hl">Nové pravidlá parkovania v centre</span>
+Obsah:
+<span class="var-hl">[telo_clanku — automaticky z článku]</span>
+
+Požiadavky:
+- Dĺžka epizódy: približne <span class="var-hl">8</span> minút
+- Štýl: <span class="var-hl">Konverzačný</span>
+- Počet moderátorov: <span class="var-hl">2</span>
+- Pridaj úvodný jingle popis a záverečné CTA.</div>
+                <div class="card-title" style="font-size:14px;margin:20px 0 12px"><i class="fa-solid fa-robot mr-2" style="color:var(--success)"></i>Odpoveď modelu</div>
+                <div class="resp-box" id="respBox"><span style="color:var(--muted)">Spusti test pre zobrazenie ukážkovej odpovede modelu…</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="editor-footer">
+          <div class="save-status"><i class="fa-solid fa-circle" style="color:var(--warning);font-size:8px"></i> Neuložené zmeny · koncept v13</div>
+          <div>
+            <button class="btn btn-outline" onclick="goFeatureBack()">Zrušiť</button>
+            <button class="btn btn-outline-blue"><i class="fa-solid fa-floppy-disk mr-2"></i>Uložiť koncept</button>
+            <button class="btn btn-success"><i class="fa-solid fa-rocket mr-2"></i>Publikovať verziu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="help-fab"><i class="fa-solid fa-question"></i></div>
+
+<!-- MODAL ADD VAR -->
+<div class="modal fade" id="varModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+  <div class="modal-header" style="padding:18px 24px"><h5 style="font-size:16px;font-weight:600">Pridať parametrizovateľnú premennú</h5><button class="close" data-dismiss="modal">&times;</button></div>
+  <div class="modal-body" style="padding:24px">
+    <div class="row">
+      <div class="col-6 form-group"><label class="form-label">Kľúč (key)</label><input class="form-control" placeholder="napr. tonalita"></div>
+      <div class="col-6 form-group"><label class="form-label">Label</label><input class="form-control" placeholder="napr. Tonalita textu"></div>
+    </div>
+    <div class="row">
+      <div class="col-6 form-group"><label class="form-label">Typ</label><select class="custom-select"><option>text</option><option>number</option><option>select</option><option>boolean</option></select></div>
+      <div class="col-6 form-group"><label class="form-label">Zdroj hodnoty</label><select class="custom-select"><option>vstup používateľa</option><option>auto · z článku</option><option>fixná hodnota</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Predvolená hodnota</label><input class="form-control"></div>
+    <div style="display:flex;align-items:center;gap:10px"><label class="switch"><input type="checkbox"><span class="slider-sw"></span></label><span class="form-label" style="margin:0">Povinné pole</span></div>
+  </div>
+  <div class="modal-footer" style="padding:14px 24px"><button class="btn btn-outline" data-dismiss="modal">Zrušiť</button><button class="btn btn-blue" data-dismiss="modal">Pridať premennú</button></div>
+</div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+<script>
+const FEATURES={
+  podcast:{name:'Podcastové štúdio',icon:'fa-podcast',cls:'fi-podcast'},
+  qa:{name:'Q&A pre článok',icon:'fa-comments',cls:'fi-qa'},
+  perex:{name:'Perex generátor',icon:'fa-align-left',cls:'fi-perex'},
+  quiz:{name:'Kvíz generátor',icon:'fa-circle-question',cls:'fi-quiz'}
+};
+let currentFeature='podcast';
+const ALL_MODELS=[
+  {id:'claude-opus-4',label:'claude-opus-4 (Anthropic)',websearch:true,reasoning:true},
+  {id:'claude-sonnet-4',label:'claude-sonnet-4 (Anthropic)',websearch:true,reasoning:true},
+  {id:'claude-haiku-3.5',label:'claude-haiku-3.5 (Anthropic)',websearch:false,reasoning:false},
+  {id:'gpt-4.1',label:'gpt-4.1 (OpenAI)',websearch:true,reasoning:false},
+  {id:'gpt-4o',label:'gpt-4o (OpenAI)',websearch:true,reasoning:false},
+  {id:'o3',label:'o3 (OpenAI)',websearch:true,reasoning:true},
+  {id:'o4-mini',label:'o4-mini (OpenAI)',websearch:true,reasoning:true},
+  {id:'gemini-2.5-pro',label:'gemini-2.5-pro (Google)',websearch:true,reasoning:true},
+  {id:'gemini-2.5-flash',label:'gemini-2.5-flash (Google)',websearch:true,reasoning:false}
+];
+function populateModels(){modelSel.innerHTML='';ALL_MODELS.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.label;modelSel.appendChild(o);});onModelChange();}
+function onModelChange(){
+  const m=ALL_MODELS.find(x=>x.id===modelSel.value);
+  if(m.reasoning){reasoningWrap.classList.remove('disabled-field');reasonCap.className='cap-pill cap-yes';reasonCap.textContent='dostupné';reasoningSel.disabled=false;}
+  else{reasoningWrap.classList.add('disabled-field');reasonCap.className='cap-pill cap-no';reasonCap.textContent='nedostupné pre tento model';reasoningSel.disabled=true;}
+  if(m.websearch){websearchWrap.classList.remove('disabled-field');webCap.className='cap-pill cap-yes';webCap.textContent='dostupné';websearchSw.disabled=false;websearchHint.textContent='Model môže vyhľadávať aktuálne informácie na webe.';}
+  else{websearchWrap.classList.add('disabled-field');webCap.className='cap-pill cap-no';webCap.textContent='nedostupné pre tento model';websearchSw.disabled=true;websearchSw.checked=false;websearchHint.textContent='Tento model nepodporuje web search.';}
+}
+function onRespFormatChange(){schemaWrap.style.display=(respFormatSel.value==='schema')?'':'none';}
+function show(v){['view-features','view-feature','view-editor'].forEach(x=>document.getElementById(x).style.display=(x===v?'block':'none'));window.scrollTo(0,0);}
+function goFeatures(){show('view-features');pageTitle.innerText='AI Service Admin';breadcrumb.innerHTML='<a onclick="goFeatures()">Domov</a><span class="sep">/</span><span>AI Service Admin</span>';}
+function openFeature(k){currentFeature=k;const f=FEATURES[k];pageTitle.innerText=f.name;breadcrumb.innerHTML='<a onclick="goFeatures()">AI Service Admin</a><span class="sep">/</span><span>'+f.name+'</span>';show('view-feature');}
+function goFeatureBack(){openFeature(currentFeature);}
+function openEditor(name,isDefault){
+  const f=FEATURES[currentFeature];
+  edBrand.innerText=name;edIcon.className='feature-icon '+f.cls;edIcon.innerHTML='<i class="fa-solid '+f.icon+'"></i>';
+  pageTitle.innerText=f.name+' › '+name;
+  breadcrumb.innerHTML='<a onclick="goFeatures()">AI Service Admin</a><span class="sep">/</span><a onclick="goFeatureBack()">'+f.name+'</a><span class="sep">/</span><span>'+name+'</span>';
+  // default vs. per-Stránka: skry toggle + infobox pri predvolenom nastavení
+  activeToggleWrap.style.display=isDefault?'none':'flex';
+  if(isDefault){overrideInfo.style.display='none';}
+  else{overrideInfo.style.display='flex';overrideInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Táto Stránka má <b>vlastné nastavenie</b>. <a style="text-decoration:underline">Vrátiť na predvolené nastavenie</a>.';}
+  document.querySelectorAll('#view-editor .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('#view-editor .tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-model'));
+  show('view-editor');
+}
+function switchTab(el,id){document.querySelectorAll('#view-editor .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('#view-editor .tab-pane').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function runTest(){respBox.innerHTML='<div style="color:var(--muted)"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Generujem…</div>';setTimeout(()=>{respBox.innerHTML='<b style="color:var(--heading)">🎙️ EPIZÓDA: Nové pravidlá parkovania v centre</b><br><br><b>[Jingle – 5s]</b><br><br><b>Moderátor 1:</b> Vitajte pri ďalšej epizóde! Dnes sa pozrieme na zmeny, ktoré pocíti každý vodič v centre…<br><b>Moderátor 2:</b> Presne tak. Mesto zavádza úplne nový systém zón…<br><br><span style="color:var(--muted)">…(skrátené) · ~8 min · 2 moderátori · model: claude-opus-4</span>';},900);}
+populateModels();
+</script>
+</body>
+</html>
