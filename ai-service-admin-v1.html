@@ -111,10 +111,21 @@ a:hover{text-decoration:none;}
 
 /* ===== FEATURE HEAD (editor) ===== */
 .feature-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
-.fi-podcast{background:linear-gradient(135deg,#7c6df2,#a99bff);}
-.fi-qa{background:linear-gradient(135deg,#4a89dc,#6fa8ec);}
-.fi-perex{background:linear-gradient(135deg,#27ae60,#48d18d);}
-.fi-quiz{background:linear-gradient(135deg,#f0697f,#e74c5e);}
+.fi-c1{background:linear-gradient(135deg,#7c6df2,#a99bff);}
+.fi-c2{background:linear-gradient(135deg,#4a89dc,#6fa8ec);}
+.fi-c3{background:linear-gradient(135deg,#f0697f,#e74c5e);}
+.fi-c4{background:linear-gradient(135deg,#27ae60,#48d18d);}
+.fi-c5{background:linear-gradient(135deg,#f0a500,#ffc14d);}
+.fi-c6{background:linear-gradient(135deg,#e67e22,#f0a060);}
+.fi-c7{background:linear-gradient(135deg,#16a3b8,#4fd0e0);}
+.fi-c8{background:linear-gradient(135deg,#5b6bd6,#8a97ec);}
+.fi-c9{background:linear-gradient(135deg,#3b5998,#5a7bc4);}
+.fi-c10{background:linear-gradient(135deg,#e0457b,#f47ba6);}
+.fi-c11{background:linear-gradient(135deg,#8e44ad,#b06fd0);}
+.fi-c12{background:linear-gradient(135deg,#c0392b,#e06457);}
+.fi-c13{background:linear-gradient(135deg,#00a3a3,#3fd0d0);}
+.fi-c14{background:linear-gradient(135deg,#2d6cdf,#5a93f0);}
+.fi-c15{background:linear-gradient(135deg,#5a7d2a,#8bb04f);}
 
 /* ===== TABS ===== */
 .editor-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);padding:0 10px;flex-wrap:wrap;}
@@ -221,15 +232,59 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
             <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
           </div>
           <div class="feat-row" onclick="openFeature('qa')">
-            <div class="fname">Q&amp;A pre článok</div>
-            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
-          </div>
-          <div class="feat-row" onclick="openFeature('perex')">
-            <div class="fname">Perex generátor</div>
+            <div class="fname">Q&amp;A k článku</div>
             <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
           </div>
           <div class="feat-row" onclick="openFeature('quiz')">
-            <div class="fname">Kvíz generátor</div>
+            <div class="fname">Kvíz k téme</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('poll')">
+            <div class="fname">Anketa k článku</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('tags')">
+            <div class="fname">Tagy k článku</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('iabtags')">
+            <div class="fname">IAB tagy k článku</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('titles')">
+            <div class="fname">Alternatívne titulky pre ABC test</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('related')">
+            <div class="fname">Súvisiace články k článku</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('linkpost')">
+            <div class="fname">Status pre Linkpost na FB/IG</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('trending')">
+            <div class="fname">Trending Topics</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('videotitles')">
+            <div class="fname">Titulky pre videá</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('transcribe')">
+            <div class="fname">Prepis audio/video na text</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('images')">
+            <div class="fname">Odporúčanie obrázkov k článku</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('copilot')">
+            <div class="fname">Asistent redaktora / Copilot</div>
+            <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
+          </div>
+          <div class="feat-row" onclick="openFeature('tasr')">
+            <div class="fname">TASR editor - Trend / Ekonomický servis</div>
             <button class="btn btn-outline-blue btn-sm"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button>
           </div>
         </div>
@@ -328,7 +383,7 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
     <div id="view-editor" style="display:none">
       <div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;">
         <div class="card-body" style="display:flex;align-items:center;gap:16px;padding-bottom:0;">
-          <div class="feature-icon fi-podcast" id="edIcon"><i class="fa-solid fa-podcast"></i></div>
+          <div class="feature-icon fi-c1" id="edIcon"><i class="fa-solid fa-podcast"></i></div>
           <div style="flex:1">
             <h4 style="font-size:17px">Podcastové štúdio <span style="color:#c3ccd4">›</span> <span id="edBrand" style="color:var(--blue)">Plus JEDEN Deň</span></h4>
             <span class="card-subtitle">Nastavenie LLM modelu pre túto Stránku</span>
@@ -589,10 +644,21 @@ Požiadavky:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script>
 const FEATURES={
-  podcast:{name:'Podcastové štúdio',icon:'fa-podcast',cls:'fi-podcast'},
-  qa:{name:'Q&A pre článok',icon:'fa-comments',cls:'fi-qa'},
-  perex:{name:'Perex generátor',icon:'fa-align-left',cls:'fi-perex'},
-  quiz:{name:'Kvíz generátor',icon:'fa-circle-question',cls:'fi-quiz'}
+  podcast:{name:'Podcastové štúdio',icon:'fa-podcast',cls:'fi-c1'},
+  qa:{name:'Q&A k článku',icon:'fa-comments',cls:'fi-c2'},
+  quiz:{name:'Kvíz k téme',icon:'fa-circle-question',cls:'fi-c3'},
+  poll:{name:'Anketa k článku',icon:'fa-square-poll-vertical',cls:'fi-c4'},
+  tags:{name:'Tagy k článku',icon:'fa-tags',cls:'fi-c5'},
+  iabtags:{name:'IAB tagy k článku',icon:'fa-tag',cls:'fi-c6'},
+  titles:{name:'Alternatívne titulky pre ABC test',icon:'fa-heading',cls:'fi-c7'},
+  related:{name:'Súvisiace články k článku',icon:'fa-link',cls:'fi-c8'},
+  linkpost:{name:'Status pre Linkpost na FB/IG',icon:'fa-share-nodes',cls:'fi-c9'},
+  trending:{name:'Trending Topics',icon:'fa-arrow-trend-up',cls:'fi-c10'},
+  videotitles:{name:'Titulky pre videá',icon:'fa-closed-captioning',cls:'fi-c11'},
+  transcribe:{name:'Prepis audio/video na text',icon:'fa-microphone-lines',cls:'fi-c12'},
+  images:{name:'Odporúčanie obrázkov k článku',icon:'fa-image',cls:'fi-c13'},
+  copilot:{name:'Asistent redaktora / Copilot',icon:'fa-robot',cls:'fi-c14'},
+  tasr:{name:'TASR editor - Trend / Ekonomický servis',icon:'fa-newspaper',cls:'fi-c15'}
 };
 let currentFeature='podcast';
 const ALL_MODELS=[
