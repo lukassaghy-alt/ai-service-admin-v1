@@ -49,6 +49,8 @@ a:hover{text-decoration:none;}
 .menu a:hover{background:#f6f8fb;color:var(--heading);}
 .menu a.active{background:var(--blue-soft);color:var(--blue);font-weight:600;box-shadow:inset 3px 0 0 var(--blue);}
 .menu a.active i.lead-ic{color:var(--blue);}
+.menu a.sub{padding-left:54px;font-size:13.5px;}
+.menu a.sub i.lead-ic{font-size:14px;}
 
 /* ===== TOPBAR ===== */
 .topbar{position:fixed;top:0;left:240px;right:0;height:74px;background:#fff;border-bottom:1px solid var(--border);z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 30px;}
@@ -111,6 +113,7 @@ a:hover{text-decoration:none;}
 
 /* ===== FEATURE HEAD (editor) ===== */
 .feature-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
+.feat-list-ic{width:38px;height:38px;font-size:16px;border-radius:9px;flex:0 0 auto;}
 .fi-c1{background:linear-gradient(135deg,#7c6df2,#a99bff);}
 .fi-c2{background:linear-gradient(135deg,#4a89dc,#6fa8ec);}
 .fi-c3{background:linear-gradient(135deg,#f0697f,#e74c5e);}
@@ -175,6 +178,17 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
 .modal-header{border-bottom:1px solid var(--border);}
 .modal-footer{border-top:1px solid var(--border);}
 
+/* ===== DEMO MODE TOGGLE (len pre demo prezentáciu, nie súčasť CMS UI) ===== */
+.demo-toggle{position:fixed;left:18px;bottom:16px;z-index:70;font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.4px;color:#9aa5b1;background:rgba(255,255,255,.75);border:1px dashed #c7ccd6;border-radius:20px;padding:5px 11px;opacity:.5;cursor:pointer;transition:.15s;}
+.demo-toggle:hover{opacity:1;color:var(--blue);border-color:var(--blue);}
+.demo-toggle .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c3ccd6;margin-right:6px;vertical-align:middle;}
+body.mode-mvp .demo-toggle .dot{background:var(--blue);}
+.mvp-only,.mvp-only-block{display:none;}
+body.mode-mvp .mvp-only{display:inline-block;}
+body.mode-mvp .mvp-only-block{display:block;}
+body.mode-mvp .full-only{display:none !important;}
+body.mode-mvp .mvp-hidden{display:none !important;}
+
 @media(max-width:991px){
   .sidebar{width:64px;}.brand{font-size:0;padding:24px 10px;}.brand:before{content:"E";font-size:24px;}
   .menu a span,.menu a .chev{display:none;}.topbar{left:64px;}.content{margin-left:64px;}
@@ -193,14 +207,14 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
     <a><i class="fa-regular fa-images lead-ic"></i><span>DAM</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-solid fa-play lead-ic"></i><span>Video</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-solid fa-puzzle-piece lead-ic"></i><span>Moduly</span><i class="fa-solid fa-chevron-right chev"></i></a>
-    <a class="active"><i class="fa-solid fa-robot lead-ic"></i><span>AI Service Admin</span></a>
     <a><i class="fa-regular fa-circle-check lead-ic"></i><span>Testy</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-regular fa-rectangle-list lead-ic"></i><span>Ponuky článkov</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-solid fa-print lead-ic"></i><span>Print</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-solid fa-chart-line lead-ic"></i><span>Editor výkonnosť</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-regular fa-star lead-ic"></i><span>Sponzorované články</span><i class="fa-solid fa-chevron-right chev"></i></a>
     <a><i class="fa-solid fa-database lead-ic"></i><span>Data Sandbox</span><i class="fa-solid fa-chevron-right chev"></i></a>
-    <a><i class="fa-solid fa-gear lead-ic"></i><span>Systém</span><i class="fa-solid fa-chevron-right chev"></i></a>
+    <a class="has-sub"><i class="fa-solid fa-gear lead-ic"></i><span>Systém</span><i class="fa-solid fa-chevron-down chev"></i></a>
+    <a class="active sub"><i class="fa-solid fa-robot lead-ic"></i><span>AI Service Admin</span></a>
   </div>
 </div>
 
@@ -309,7 +323,7 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
             <div><span class="form-hint">Temperature</span><br><b style="color:var(--heading)">0.7</b></div>
             <div><span class="form-hint">Max tokens</span><br><b style="color:var(--heading)">4096</b></div>
             <div><span class="form-hint">Web search</span><br><span class="badge b-active">Zapnuté</span></div>
-            <div><span class="form-hint">Aktívna verzia</span><br><b style="color:var(--heading)">v7</b></div>
+            <div class="full-only"><span class="form-hint">Aktívna verzia</span><br><b style="color:var(--heading)">v7</b></div>
           </div>
         </div>
       </div>
@@ -322,56 +336,56 @@ textarea.form-control{font-family:'SFMono-Regular',Consolas,monospace;font-size:
           </div>
           <table class="table">
             <thead><tr>
-              <th>Stránka</th><th>Stav</th><th>Model</th><th>Aktívna verzia</th><th>Posledná zmena</th><th class="text-right">Akcie</th>
+              <th>Stránka</th><th>Stav</th><th>Model</th><th class="full-only">Aktívna verzia</th><th>Posledná zmena</th><th class="text-right">Akcie</th>
             </tr></thead>
             <tbody>
               <tr>
                 <td>Plus JEDEN Deň</td>
-                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-active">Vlastné</span></td>
                 <td><span class="badge b-model">claude-opus-4</span></td>
-                <td>v12</td>
+                <td class="full-only">v12</td>
                 <td>02.06.2026 · J. Novák</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Plus JEDEN Deň')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Plus JEDEN Deň')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
               <tr>
                 <td>Šport 24</td>
-                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-active">Vlastné</span></td>
                 <td><span class="badge b-model">claude-sonnet-4</span></td>
-                <td>v5</td>
+                <td class="full-only">v5</td>
                 <td>29.05.2026 · M. Kováč</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Šport 24')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Šport 24')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
               <tr>
                 <td>Nový Čas</td>
-                <td><span class="badge b-active">Vlastné · Aktívne</span></td>
+                <td><span class="badge b-active">Vlastné</span></td>
                 <td><span class="badge b-model">gpt-4.1</span></td>
-                <td>v8</td>
+                <td class="full-only">v8</td>
                 <td>31.05.2026 · L. Saghy</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Nový Čas')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Nový Čas')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
               <tr>
                 <td>Eva</td>
-                <td><span class="badge b-inherit">Dedí predvolené</span></td>
-                <td><span class="badge b-model" style="opacity:.55">claude-sonnet-4</span></td>
-                <td><span style="opacity:.5">— (v7 predvolené)</span></td>
+                <td><span class="badge b-inherit">Predvolené</span></td>
+                <td><span class="badge b-model">claude-sonnet-4</span></td>
+                <td class="full-only"><span style="opacity:.5">— (v7 predvolené)</span></td>
                 <td>—</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Eva')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Eva')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
               <tr>
                 <td>Emma</td>
-                <td><span class="badge b-inherit">Dedí predvolené</span></td>
-                <td><span class="badge b-model" style="opacity:.55">claude-sonnet-4</span></td>
-                <td><span style="opacity:.5">— (v7 predvolené)</span></td>
+                <td><span class="badge b-inherit">Predvolené</span></td>
+                <td><span class="badge b-model">claude-sonnet-4</span></td>
+                <td class="full-only"><span style="opacity:.5">— (v7 predvolené)</span></td>
                 <td>—</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Emma')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Emma')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
               <tr>
                 <td>Autobild</td>
-                <td><span class="badge b-draft">Vlastné · Koncept</span></td>
+                <td><span class="badge b-active">Vlastné</span></td>
                 <td><span class="badge b-model">gpt-4o</span></td>
-                <td><span style="opacity:.5">draft v2</span></td>
+                <td class="full-only"><span style="opacity:.5">draft v2</span></td>
                 <td>04.06.2026 · A. Horák</td>
-                <td class="text-right"><span class="act-btn" title="Detail / upraviť" onclick="openEditor('Autobild')"><i class="fa-solid fa-circle-info"></i></span></td>
+                <td class="text-right"><button class="btn btn-outline-blue btn-sm" onclick="openEditor('Autobild')"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Detail</button></td>
               </tr>
             </tbody>
           </table>
@@ -532,6 +546,7 @@ Požiadavky:
               <label class="form-label">Dostupné premenné</label><br>
               <span class="var-chip">{{nazov_clanku}}</span><span class="var-chip">{{telo_clanku}}</span><span class="var-chip">{{jazyk}}</span>
               <span class="var-chip">{{dlzka_minut}}</span><span class="var-chip">{{styl_podcastu}}</span><span class="var-chip">{{pocet_moderatorov}}</span>
+              <div class="form-hint mvp-only-block" style="margin-top:9px"><i class="fa-solid fa-circle-info mr-1"></i>Premenné sú v tejto verzii definované v backende — vkladajú sa do promptu, ale nemajú administráciu v admine.</div>
             </div>
           </div>
 
@@ -606,11 +621,12 @@ Požiadavky:
 
         </div>
         <div class="editor-footer">
-          <div class="save-status"><i class="fa-solid fa-circle" style="color:var(--warning);font-size:8px"></i> Neuložené zmeny · koncept v13</div>
+          <div class="save-status"><i class="fa-solid fa-circle" style="color:var(--warning);font-size:8px"></i> Neuložené zmeny<span class="full-only"> · koncept v13</span></div>
           <div>
             <button class="btn btn-outline" onclick="goFeatureBack()">Zrušiť</button>
-            <button class="btn btn-outline-blue"><i class="fa-solid fa-floppy-disk mr-2"></i>Uložiť koncept</button>
-            <button class="btn btn-success"><i class="fa-solid fa-rocket mr-2"></i>Publikovať verziu</button>
+            <button class="btn btn-outline-blue full-only"><i class="fa-solid fa-floppy-disk mr-2"></i>Uložiť koncept</button>
+            <button class="btn btn-success full-only"><i class="fa-solid fa-rocket mr-2"></i>Publikovať verziu</button>
+            <button class="btn btn-success mvp-only"><i class="fa-solid fa-floppy-disk mr-2"></i>Uložiť</button>
           </div>
         </div>
       </div>
@@ -620,6 +636,7 @@ Požiadavky:
 </div>
 
 <div class="help-fab"><i class="fa-solid fa-question"></i></div>
+<button id="modeBtn" class="demo-toggle" onclick="toggleMode()" title="Len pre demo prezentáciu – nie je súčasťou CMS UI"><span class="dot"></span>DEMO: Plná verzia</button>
 
 <!-- MODAL ADD VAR -->
 <div class="modal fade" id="varModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
@@ -691,7 +708,8 @@ function openEditor(name,isDefault){
   pageTitle.innerText=f.name+' › '+name;
   breadcrumb.innerHTML='<a onclick="goFeatures()">AI Service Admin</a><span class="sep">/</span><a onclick="goFeatureBack()">'+f.name+'</a><span class="sep">/</span><span>'+name+'</span>';
   // default vs. per-Stránka: skry toggle + infobox pri predvolenom nastavení
-  activeToggleWrap.style.display=isDefault?'none':'flex';
+  editorIsDefault=!!isDefault;
+  activeToggleWrap.style.display=(isDefault || demoMode==='mvp')?'none':'flex';
   if(isDefault){overrideInfo.style.display='none';}
   else{overrideInfo.style.display='flex';overrideInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Táto Stránka má <b>vlastné nastavenie</b>. <a style="text-decoration:underline">Vrátiť na predvolené nastavenie</a>.';}
   document.querySelectorAll('#view-editor .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
@@ -701,6 +719,52 @@ function openEditor(name,isDefault){
 function switchTab(el,id){document.querySelectorAll('#view-editor .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('#view-editor .tab-pane').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function runTest(){respBox.innerHTML='<div style="color:var(--muted)"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Generujem…</div>';setTimeout(()=>{respBox.innerHTML='<b style="color:var(--heading)">🎙️ EPIZÓDA: Nové pravidlá parkovania v centre</b><br><br><b>[Jingle – 5s]</b><br><br><b>Moderátor 1:</b> Vitajte pri ďalšej epizóde! Dnes sa pozrieme na zmeny, ktoré pocíti každý vodič v centre…<br><b>Moderátor 2:</b> Presne tak. Mesto zavádza úplne nový systém zón…<br><br><span style="color:var(--muted)">…(skrátené) · ~8 min · 2 moderátori · model: claude-opus-4</span>';},900);}
 populateModels();
+
+// vloženie feature ikony do listingu (podľa mapy FEATURES)
+document.querySelectorAll('#view-features .feat-row').forEach(r=>{
+  const m=(r.getAttribute('onclick')||'').match(/openFeature\('([^']+)'\)/);
+  if(!m) return; const f=FEATURES[m[1]]; if(!f) return;
+  const fname=r.querySelector('.fname'); if(!fname) return;
+  const left=document.createElement('div'); left.style.cssText='display:flex;align-items:center;gap:14px;';
+  const ic=document.createElement('div'); ic.className='feature-icon feat-list-ic '+f.cls; ic.innerHTML='<i class="fa-solid '+f.icon+'"></i>';
+  r.insertBefore(left, fname); left.appendChild(ic); left.appendChild(fname);
+});
+
+/* ===== DEMO režim (len pre prezentáciu, nie súčasť CMS UI) ===== */
+// označ AI features mimo MVP (MVP = len Podcastové štúdio + Q&A k článku)
+document.querySelectorAll('#view-features .feat-row').forEach(r=>{
+  const m=(r.getAttribute('onclick')||'').match(/openFeature\('([^']+)'\)/);
+  if(m && !['podcast','qa'].includes(m[1])) r.classList.add('mvp-hidden');
+});
+// označ záložky Premenné / Verzie / Náhľad-Test (a ich obsah) ako mimo MVP
+['tab-vars','tab-versions','tab-preview'].forEach(id=>{ const p=document.getElementById(id); if(p) p.classList.add('mvp-hidden'); });
+document.querySelectorAll('#view-editor .editor-tabs .tab').forEach(t=>{ if(/tab-vars|tab-versions|tab-preview/.test(t.getAttribute('onclick')||'')) t.classList.add('mvp-hidden'); });
+
+let demoMode='full', editorIsDefault=false;
+function setDemoMode(m){
+  demoMode=m;
+  document.body.classList.toggle('mode-mvp', m==='mvp');
+  document.getElementById('modeBtn').innerHTML='<span class="dot"></span>'+(m==='mvp'?'DEMO: MVP':'DEMO: Plná verzia');
+  // kill-switch „Feature aktívny pre Stránku": v MVP vždy skrytý
+  activeToggleWrap.style.display=(m==='mvp' || editorIsDefault)?'none':'flex';
+  // oddeľovacia čiara: v MVP posledný viditeľný riadok (Q&A) bez čiary, vo full podľa CSS
+  const rows=[...document.querySelectorAll('#view-features .feat-row')];
+  rows.forEach(r=>r.style.borderBottom='');
+  if(m==='mvp'){ const vis=rows.filter(r=>!r.classList.contains('mvp-hidden')); if(vis.length) vis[vis.length-1].style.borderBottom='0'; }
+  if(m==='mvp'){
+    // ak je otvorený editor na skrytej záložke, prepni na Model & parametre
+    const tabs=document.querySelectorAll('#view-editor .tab');
+    tabs.forEach(t=>t.classList.remove('active'));
+    const first=document.querySelector('#view-editor .tab:not(.mvp-hidden)'); if(first) first.classList.add('active');
+    document.querySelectorAll('#view-editor .tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-model'));
+    // ak je otvorená feature mimo MVP, vráť na zoznam
+    if(document.getElementById('view-editor').style.display==='block' || document.getElementById('view-feature').style.display==='block'){
+      if(!['podcast','qa'].includes(currentFeature)) goFeatures();
+    }
+  }
+}
+function toggleMode(){ setDemoMode(demoMode==='mvp'?'full':'mvp'); }
+
 </script>
 </body>
 </html>
